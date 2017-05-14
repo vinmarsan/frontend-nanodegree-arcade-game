@@ -10,8 +10,6 @@ var Enemy = function() {
     
     this.sprite = 'images/enemy-bug.png';
     this.x = 0;
-    this.width = 10;
-    this.height = 10;
     this.posicaoY = 75; // coordenada Y de cada coluna
     this.velMax = 450; // Velocidade maxima
     this.y = Math.floor(Math.random() * 3 + 1) * this.posicaoY; //coloca inimigo em uma das 3 colunas
@@ -44,7 +42,15 @@ Enemy.prototype.render = function() {
 };
 
 Enemy.prototype.collidesWith = function(player) {
-    
+    var colWidth = 85;
+    var rowHeight = 85;
+
+    var col = Math.floor(this.x/colWidth);
+    var row = Math.floor(this.y/rowHeight) + 1;
+
+    if (col == player.col && row == player.row) {
+        return true;
+    }
   
 };
 
@@ -53,16 +59,14 @@ Enemy.prototype.collidesWith = function(player) {
 // a handleInput() method.
 var Player = function () {
     this.sprite = 'images/char-boy.png';
-    this.width = 10;
-    this.height = 10;
     this.startcol = 2;
-    this.startlinha = 5;
+    this.startrow = 5;
     this.col = this.startcol;
-    this.linha = this.startlinha;
+    this.row = this.startrow;
     this.posicaoX = 101;
     this.posicaoY = 83;
     this.x = this.col * this.posicaoX;
-    this.y = this.linha * this.posicaoY;
+    this.y = this.row * this.posicaoY;
 };
 
 
@@ -73,13 +77,13 @@ Player.prototype.render = function() {
 
 Player.prototype.update = function() {
     this.x = this.col * this.posicaoX;
-    this.y = this.linha * this.posicaoY;
+    this.y = this.row * this.posicaoY;
 };
 
 
 Player.prototype.reset = function() {
     this.col = this.startcol;
-    this.linha = this.startlinha;
+    this.row = this.startrow;
 };
 
 
@@ -92,9 +96,10 @@ Player.prototype.handleInput = function(direction) {
         }
         break;
         case 'up':
-            this.linha -= 1;
-            if (this.linha < 0) {
-                this.linha = 5;
+            this.row -= 1;
+            if (this.row < 1) {
+                this.row = 5;
+                alert("Parabéns você ganhou!")
         }
         break;
         case 'right':
@@ -104,9 +109,9 @@ Player.prototype.handleInput = function(direction) {
         }
         break;
         case 'down':
-            this.linha += 1;
-            if (this.linha > 5) {
-                this.linha = 5;
+            this.row += 1;
+            if (this.row > 5) {
+                this.row = 5;
         }
         break;
     }
@@ -119,9 +124,11 @@ Player.prototype.handleInput = function(direction) {
 
 var enemy1 = new Enemy();
 var enemy2 = new Enemy();
+var enemy3 = new Enemy();
 var allEnemies = [];
 allEnemies.push(enemy1);
 allEnemies.push(enemy2);
+allEnemies.push(enemy3);
 
 var player = new Player();
 
